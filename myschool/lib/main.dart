@@ -1,10 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:myschool/controllers/auth.dart';
+import 'package:get/get.dart';
 import 'package:myschool/routes.dart';
+import 'package:myschool/screens/intro_screen/intro_screen.dart';
+import 'package:myschool/screens/login_screen/login_screen.dart';
 import 'package:myschool/screens/splash_screen/splash_screen.dart';
 import 'package:myschool/theme.dart';
-import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 void main() {
@@ -22,21 +23,13 @@ class MyApp extends StatelessWidget {
     //context, orientation, device
     //it always requires, see plugin documentation
     return Sizer(builder: (context, orientation, device){
-      return
-        /*MultiProvider(providers: [
-        ChangeNotifierProvider.value(value: AuthController(),
-        ),
-
-      ])*/
-
-        MaterialApp(
+      return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'My School',
         theme: CustomTheme().baseTheme,
         //initial route is splash screen
         //mean first screen
-        initialRoute: SplashScreen.routeName,
-        //define the routes file here in order to access the routes any where all over the app
+        initialRoute: LoginScreen.routeName,
         routes: routes,
       );
     });

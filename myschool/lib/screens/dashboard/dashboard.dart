@@ -1,11 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:myschool/controllers/studentController.dart';
 import 'package:myschool/screens/dashboard/widgets/parent_data.dart';
+import 'package:myschool/screens/login_screen/login_screen.dart';
+import 'package:myschool/suggestions/SuggestionScreen.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants.dart';
 
+import '../../controllers/authController.dart';
+import '../../controllers/evenementController.dart';
+import '../../widgets/customAlert.dart';
+import '../../widgets/loadingWidget.dart';
+import '../changePassword/changePasswordScreen.dart';
+import '../children/childrensScreen.dart';
 import '../evenements/evenements.dart';
 import '../fee_screen/fee_screen.dart';
 import '../my_profile/my_profile.dart';
@@ -18,9 +28,14 @@ class dashboard extends StatefulWidget {
 }
 
 class _dashboardState extends State<dashboard> {
+  final TextEditingController _identifiantStudentController =
+      TextEditingController();
 
-  TextEditingController _identifiantStudentController = TextEditingController();
-
+  final authController = Get.find<AuthController>();
+  // final studentController = Get.find<StudentController>();
+  
+    final StudentController studentController =
+        Get.put(StudentController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +46,7 @@ class _dashboardState extends State<dashboard> {
           Container(
             width: 100.w,
             height: 40.h,
-            padding: EdgeInsets.all(kDefaultPadding),
+            padding: const EdgeInsets.all(kDefaultPadding),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -42,9 +57,9 @@ class _dashboardState extends State<dashboard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ParentName(
-                          parentName: 'John Doe',
+                          parentName:
+                              '${authController.user.prenoms} ${authController.user.nom}',
                         ),
-
                       ],
                     ),
                     kHalfSizedBox,
@@ -58,26 +73,37 @@ class _dashboardState extends State<dashboard> {
                   ],
                 ),
                 sizedBox,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ParentDataCard(
-                      onPress: () {
-                        //go to attendance screen
-                      },
-                      title: 'Attendance',
-                      value: '90.02%',
-                    ),
-                    ParentDataCard(
-                      onPress: () {
-                        //go to fee due screen
-                        Navigator.pushNamed(context, FeeScreen.routeName);
-                      },
-                      title: 'Scolarité ',
-                      value: '600\$',
-                    ),
-                  ],
-                )
+                FutureBuilder(
+                    future: Get.put(StudentController())
+                        .getStudentByParent(id: "1"),
+                    builder: (context, snapshot) {
+                      return snapshot.connectionState == ConnectionState.waiting ? CircularProgressIndicator() : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Obx(
+                            () {
+                              return ParentDataCard(
+                                onPress: () {
+                                  //go to attendance screen
+                                },
+                                title: 'Attendance',
+                                value:
+                                    '${(studentController.scolarite_total_rest.value * 100) / studentController.scolarite_total_rest.value} %',
+                              );
+                            }
+                          ),
+                          ParentDataCard(
+                            onPress: () {
+                              //go to fee due screen
+                              Navigator.pushNamed(context, FeeScreen.routeName);
+                            },
+                            title: 'Scolarité ',
+                            value:
+                                '${studentController.scolarite_total_rest.value} XOF',
+                          ),
+                        ],
+                      );
+                    })
               ],
             ),
           ),
@@ -92,56 +118,66 @@ class _dashboardState extends State<dashboard> {
               ),
               child: SingleChildScrollView(
                 //for padding
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-
                         HomeCard(
                           onPress: () {
                             //go to assignment screen here
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>EvenementScreen()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const EvenementScreen()));
                           },
                           icon: 'assets/icons/event.svg',
-                          title: 'Evènements',
+                          title: 'Activités',
                         ),
                         HomeCard(
-                          onPress: () {},
+                          onPress: () {
+                             Get.to(()=>ChildrensScreen());
+                          },
                           icon: 'assets/icons/woman-outline.svg',
                           title: 'Mes enfants',
                         ),
                       ],
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         HomeCard(
-                          onPress: () {},
-                          icon: 'assets/icons/ask.svg',
+                          onPress: () {
+                             Get.to(()=>FeeScreen());
+                          },
+                          icon: 'assets/icons/money.svg',
                           title: 'Scolarité',
                         ),
                         HomeCard(
-                          onPress: () {},
+                          onPress: () {
+                            Get.to(()=>SuggestionScreen());
+
+                          },
                           icon: 'assets/icons/ask.svg',
                           title: 'Suggestions',
                         ),
-
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-
                         HomeCard(
-                          onPress: () {},
+                          onPress: () {Get.to(()=>ChangePasswordScreen());},
                           icon: 'assets/icons/lock.svg',
                           title: 'Change\nPassword',
                         ),
                         HomeCard(
-                          onPress: () {},
+                          onPress: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()
+                            ));
+                          },
                           icon: 'assets/icons/logout.svg',
                           title: 'Se deconnecter',
                         ),
@@ -149,11 +185,9 @@ class _dashboardState extends State<dashboard> {
                     ),
                   ],
                 ),
-
               ),
             ),
           ),
-
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -165,33 +199,46 @@ class _dashboardState extends State<dashboard> {
     );
   }
 
-  _displayDialogContext(BuildContext context){
-    return showDialog(context: context, builder: (context) {
-      return AlertDialog(
-        title: Text("Identifiant"),
-        content: TextField(
-          controller: _identifiantStudentController,
-          decoration: InputDecoration(
-            hintText: "Veuiller saisir l'\identifiant de votre enfant "
-          ),
-        ),
-        actions: <Widget> [
-          FloatingActionButton(onPressed: (){
-          },
-            child: Text("Ok"),
-          )
-        ],
-      );
-    });
+  _displayDialogContext(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Ajouter un enfant"),
+            content: TextField(
+
+              controller: _identifiantStudentController,
+              decoration: const InputDecoration(
+                  hintText: "Son Matricule",
+                labelStyle: TextStyle(color: Colors.red)
+
+              ),
+            ),
+            actions: <Widget>[
+              FloatingActionButton(
+                onPressed: () {
+                  Get.dialog(Loading());
+                  Get.find<StudentController>().linkStudent(
+                      id: AuthController().token,
+                      data: {"matricule": _identifiantStudentController.text}).then((value){
+                          Get.back();
+                          CustomAlert(message: value['message'], success: value['success']);
+                      });
+                },
+                child: const Text("Ok"),
+              )
+            ],
+          );
+        });
   }
 }
 
 class HomeCard extends StatelessWidget {
   const HomeCard(
       {Key? key,
-        required this.onPress,
-        required this.icon,
-        required this.title})
+      required this.onPress,
+      required this.icon,
+      required this.title})
       : super(key: key);
   final VoidCallback onPress;
   final String icon;
@@ -221,7 +268,7 @@ class HomeCard extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.subtitle2,
+              style: Theme.of(context).textTheme.titleSmall,
             ),
           ],
         ),
@@ -229,4 +276,3 @@ class HomeCard extends StatelessWidget {
     );
   }
 }
-

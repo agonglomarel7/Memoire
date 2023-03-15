@@ -13,7 +13,7 @@ class DateSheetScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('DateSheet'),
+        title: const Text('DateSheet'),
       ),
       body: Container(
         width: 100.w,
@@ -25,16 +25,16 @@ class DateSheetScreen extends StatelessWidget {
           itemCount: dateSheet.length,
           itemBuilder: (context, index) {
             return Container(
-              margin: EdgeInsets.only(
+              margin: const EdgeInsets.only(
                   left: kDefaultPadding / 2, right: kDefaultPadding / 2),
-              padding: EdgeInsets.all(kDefaultPadding / 2),
+              padding: const EdgeInsets.all(kDefaultPadding / 2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
                     height: 3.h,
-                    child: Divider(
+                    child: const Divider(
                       thickness: 1.0,
                     ),
                   ),
@@ -51,13 +51,13 @@ class DateSheetScreen extends StatelessWidget {
                           Text(
                             dateSheet[index].date.toString(),
                             style:
-                                Theme.of(context).textTheme.subtitle2!.copyWith(
+                                Theme.of(context).textTheme.titleSmall!.copyWith(
                                       color: kTextBlackColor,
                                       fontWeight: FontWeight.w900,
                                     ),
                           ),
                           Text(dateSheet[index].monthName,
-                              style: Theme.of(context).textTheme.caption),
+                              style: Theme.of(context).textTheme.bodySmall),
                         ],
                       ),
 
@@ -69,13 +69,13 @@ class DateSheetScreen extends StatelessWidget {
                           Text(
                             dateSheet[index].subjectName,
                             style:
-                                Theme.of(context).textTheme.subtitle2!.copyWith(
+                                Theme.of(context).textTheme.titleSmall!.copyWith(
                                       color: kTextBlackColor,
                                       fontWeight: FontWeight.w900,
                                     ),
                           ),
                           Text(dateSheet[index].dayName,
-                              style: Theme.of(context).textTheme.caption),
+                              style: Theme.of(context).textTheme.bodySmall),
                         ],
                       ),
                       //3rd one
@@ -85,7 +85,7 @@ class DateSheetScreen extends StatelessWidget {
                         children: [
                           Text(
                             '🕒${dateSheet[index].time}',
-                            style: Theme.of(context).textTheme.caption,
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
                       ),
@@ -93,7 +93,7 @@ class DateSheetScreen extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 3.h,
-                    child: Divider(
+                    child: const Divider(
                       thickness: 1.0,
                     ),
                   ),

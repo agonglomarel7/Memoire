@@ -1,33 +1,36 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants.dart';
+import '../../controllers/authController.dart';
 
 class MyProfileScreen extends StatelessWidget {
-  const MyProfileScreen({Key? key}) : super(key: key);
+  MyProfileScreen({Key? key}) : super(key: key);
   static String routeName = 'MyProfileScreen';
-
+  
+  final AuthController authController = Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //app bar theme for tablet
       appBar: AppBar(
-        title: Text('My Profile'),
+        title: const Text('My Profile'),
         actions: [
           InkWell(
             onTap: () {
               //send report to school management, in case if you want some changes to your profile
             },
             child: Container(
-              padding: EdgeInsets.only(right: kDefaultPadding / 2),
+              padding: const EdgeInsets.only(right: kDefaultPadding / 2),
               child: Row(
                 children: [
-                  Icon(Icons.report_gmailerrorred_outlined),
+                  const Icon(Icons.report_gmailerrorred_outlined),
                   kHalfWidthSizedBox,
                   Text(
                     'Report',
-                    style: Theme.of(context).textTheme.subtitle2,
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ],
               ),
@@ -54,7 +57,7 @@ class MyProfileScreen extends StatelessWidget {
                         SizerUtil.deviceType == DeviceType.tablet ? 12.w : 13.w,
                     backgroundColor: kSecondaryColor,
                     backgroundImage:
-                        AssetImage('assets/images/student_profile.jpeg'),
+                        const AssetImage('assets/images/student_profile.jpeg'),
                   ),
                   kWidthSizedBox,
                   Column(
@@ -62,11 +65,11 @@ class MyProfileScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Nom Prénom (Parents)',
-                        style: Theme.of(context).textTheme.subtitle1,
+                        '${authController.user.nom} ${authController.user.prenoms} (Parents)',
+                        style:TextStyle(fontSize: 15,color: Colors.white)
                       ),
-                      Text('Adresse email',
-                          style: Theme.of(context).textTheme.subtitle2),
+                      Text(authController.user.email,
+                          style: TextStyle(fontSize: 15,color: Colors.white))
                     ],
                   )
                 ],
@@ -74,21 +77,21 @@ class MyProfileScreen extends StatelessWidget {
             ),
 
             sizedBox,
-            ProfileDetailColumn(
+             ProfileDetailColumn(
               title: 'Email',
-              value: 'aisha12@gmail.com',
+              value: authController.user.email,
             ),
-            ProfileDetailColumn(
+             ProfileDetailColumn(
               title: 'Non de Famille',
-              value: 'John Mirza',
+              value: authController.user.nom,
             ),
-            ProfileDetailColumn(
+             ProfileDetailColumn(
               title: 'Prenom',
-              value: 'Angelica Mirza',
+              value: authController.user.prenoms,
             ),
-            ProfileDetailColumn(
+             ProfileDetailColumn(
               title: 'Numéro',
-              value: '+923066666666',
+              value: authController.user.tel,
             ),
           ],
         ),
@@ -104,7 +107,7 @@ class ProfileDetailRow extends StatelessWidget {
   final String value;
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 40.w,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -115,7 +118,7 @@ class ProfileDetailRow extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       color: kTextBlackColor,
                       fontSize: SizerUtil.deviceType == DeviceType.tablet
                           ? 7.sp
@@ -123,11 +126,11 @@ class ProfileDetailRow extends StatelessWidget {
                     ),
               ),
               kHalfSizedBox,
-              Text(value, style: Theme.of(context).textTheme.caption),
+              Text(value, style: Theme.of(context).textTheme.bodySmall),
               kHalfSizedBox,
               SizedBox(
                 width: 35.w,
-                child: Divider(
+                child: const Divider(
                   thickness: 1.0,
                 ),
               ),
@@ -161,7 +164,7 @@ class ProfileDetailColumn extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       color: kTextBlackColor,
                       fontSize: SizerUtil.deviceType == DeviceType.tablet
                           ? 7.sp
@@ -169,11 +172,11 @@ class ProfileDetailColumn extends StatelessWidget {
                     ),
               ),
               kHalfSizedBox,
-              Text(value, style: Theme.of(context).textTheme.caption),
+              Text(value, style: Theme.of(context).textTheme.bodySmall),
               kHalfSizedBox,
               SizedBox(
                 width: 92.w,
-                child: Divider(
+                child: const Divider(
                   thickness: 1.0,
                 ),
               )

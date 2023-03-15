@@ -12,8 +12,10 @@ class FeeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.cyan,
       appBar: AppBar(
-        title: Text('Fee'),
+        title: Text('Frais de scolarité'),
+        backgroundColor: Colors.cyan,
       ),
       body: Column(
         children: [
@@ -87,6 +89,7 @@ class FeeScreen extends StatelessWidget {
                             ),
                           ),
                           FeeButton(
+
                               title: fee[index].btnStatus,
                               iconData: fee[index].btnStatus == 'Paid'
                                   ? Icons.download_outlined
@@ -99,6 +102,13 @@ class FeeScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.cyan,
+        onPressed: (){
+
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
